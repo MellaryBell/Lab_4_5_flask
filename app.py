@@ -14,23 +14,22 @@ def login():
         if request.form.get("login"):
             username = request.form.get('username')
             password = request.form.get('password')
-            cursor.execute("SELECT * FROM public.users WHERE login=%s AND password=%s", (str(username), str(password)))
-            records = list(cursor.fetchall())
 
-            if len(username)==0:
-                return 'Вы не ввели имя'
-            if len(password)==0:
-                return 'Вы не ввели пароль'
+            if len(username) == 0:
+                return 'Введите имя пользователя'
+            if len(password) == 0:
+                return 'Введите пароль'
             try:
-                cursor.execute("SELECT name FROM public.users WHERE login=%s AND password=%s", (str(username), str(password)))
+                cursor.execute("SELECT name FROM public.users WHERE login=%s AND password=%s", (str(username),
+                                                                                                str(password)))
                 records = cursor.fetchall()[0]
             except TypeError:
                 return render_template('er.html')
-            return render_template('account.html', full_name=records[0][1])
+            return render_template('account.html', full_name=records)
         elif request.form.get("registration"):
             return redirect("/registration/")
-
     return render_template('login.html')
+
 @app.route('/registration/', methods=['POST', 'GET'])
 def registration():
     if request.method == 'POST':
